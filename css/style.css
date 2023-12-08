@@ -6,3 +6,8 @@ header {
 .navbar-brand {
     font-size: 2rem;
 }
+
+footer {
+    background-color: black;
+    color: white;
+}
