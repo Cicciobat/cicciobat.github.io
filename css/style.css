@@ -10,10 +10,18 @@ header {
 .facilities {
     display: flex;
     justify-content: center;
+    cursor: pointer;
 }
 
 .facilities-head {
     text-align: center;
+}
+
+
+.edit-input {
+    display: flex;
+    flex-direction: column;
+    margin: 0 0.5rem;
 }
 
 footer {
