@@ -35,3 +35,7 @@ footer {
 .btn-danger {
     background-color: #B31D17FF;
 }
+
+.confirm-deletion-popup > .ui-dialog-titlebar > .ui-dialog-titlebar-close{
+    display: none !important;
+}

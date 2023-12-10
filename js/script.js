@@ -7,16 +7,15 @@ $(async () => {
                     }
                 )
         }
+        let register = new Register();
         let lastId;
         setInterval(() => {
             lastId = register.readStudents().at(register.readStudents().length - 1).id;
-            console.log(lastId)
-        },500)
+        }, 500)
         let currentDate = new Date(Date.now())
         $('#new-date').attr('max', currentDate.toISOString().split('T')[0])
-        let register = new Register();
-        
-        
+
+
         let table = $('table tbody');
         let inputs = $('#new-student-insert :input');
         let insertStudentDialog = $("#new-student-dialog").dialog({
@@ -62,7 +61,53 @@ $(async () => {
             position: {my: "center", at: "center", of: window},
             resizable: false,
             title: 'Inserisci studente',
+        })
 
+        let confirmDeletionDialog = $("#confirm-deletion").dialog({
+            dialogClass: "confirm-deletion-popup",
+            autoOpen: false,
+            buttons: [
+                {
+                    text: 'Si',
+                    "id": "yes-button",
+                    click: () => {
+                        if (register.deleteStudent(confirmDeletionDialog.data('parent'))) {
+                            $('#yes-button, #no-button').addClass('d-none');
+                            $('#close-button').removeClass('d-none');
+                            $('#confirm-deletion-result').html('Studente eliminato correttamente.')
+                        }
+
+                    }
+                },
+                {
+                    text: 'No',
+                    "id": "no-button",
+                    click: () => {
+                        confirmDeletionDialog.dialog('close')
+                    }
+                },
+                {
+                    text: 'Close',
+                    "id": "close-button",
+                    "class": "d-none",
+                    click: () => {
+                        $('#yes-button, #no-button').removeClass('d-none');
+                        $('#close-button').addClass('d-none');
+                        confirmDeletionDialog.dialog('close')
+                    }
+                }
+            ],
+            close: () => {
+                $('#confirm-deletion-result').html('')
+                $("table tbody tr").remove();
+                populateTable();
+            },
+            closeOnEscape: false,
+            draggable: false,
+            modal: true,
+            position: {my: "center", at: "center", of: window},
+            resizable: false,
+            title: 'Conferma eliminazione',
         })
 
         populateTable()
@@ -124,6 +169,13 @@ $(async () => {
             insertStudentDialog.dialog('open');
         })
 
+        $(document).on('click', 'tr .trash', function (event) {
+            let titleBarCloseButton = $('.ui-dialog-titlebar .ui-dialog-titlebar-close')
+            titleBarCloseButton.html('<i class="fa-solid fa-xmark"></i>');
+            titleBarCloseButton.addClass('d-flex align-items-center justify-content-center btn btn-danger')
+            $('.ui-dialog-buttonset button').addClass('btn btn-danger');
+            confirmDeletionDialog.data('parent', $(this).closest('tr').attr('id')).dialog('open');
+        })
 
         function populateTable() {
             for (const student of register.readStudents()) {
@@ -171,5 +223,16 @@ class Register {
 
         localStorage.setItem('students', JSON.stringify(this.students))
         return true;
+    }
+
+    deleteStudent(id) {
+        for (const student of this.students) {
+            if (student.id.toString() === id) {
+                this.students.splice(this.students.indexOf(student), 1)
+                localStorage.setItem('students', JSON.stringify(this.students))
+                return true
+            }
+        }
+        return false;
     }
 }
