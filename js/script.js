@@ -7,9 +7,63 @@ $(async () => {
                     }
                 )
         }
-
+        let lastId;
+        setInterval(() => {
+            lastId = register.readStudents().at(register.readStudents().length - 1).id;
+            console.log(lastId)
+        },500)
+        let currentDate = new Date(Date.now())
+        $('#new-date').attr('max', currentDate.toISOString().split('T')[0])
         let register = new Register();
-        let table = $('table tbody')
+        
+        
+        let table = $('table tbody');
+        let inputs = $('#new-student-insert :input');
+        let insertStudentDialog = $("#new-student-dialog").dialog({
+            autoOpen: false,
+            buttons: [
+                {
+                    text: 'Invia',
+                    click: () => {
+                        let student = {};
+                        if ($('#new-name').val() == "" || $('#new-surname').val() == "") {
+                            $('#insertion-result').html('Inserisci i campi obbligatori.');
+                            return
+                        }
+                        inputs.each(function () {
+                            student = {
+                                id: lastId + 1,
+                                name: $('#new-name').val(),
+                                surname: $('#new-surname').val(),
+                                vote: {
+                                    score: $('#new-score').val(),
+                                    date: $('#new-date').val(),
+                                    comment: $('#new-comment').val()
+                                },
+                            }
+                        })
+                        if (register.addStudent(student)) {
+                            inputs.each(function () {
+                                $(this).val('')
+                            })
+                            $('#insertion-result').html('Studente inserito con successo.');
+                        }
+                    }
+                }
+            ],
+            close: () => {
+                $('#insertion-result').html('')
+                $("table tbody tr").remove();
+                populateTable();
+            },
+            closeOnEscape: false,
+            draggable: false,
+            modal: true,
+            position: {my: "center", at: "center", of: window},
+            resizable: false,
+            title: 'Inserisci studente',
+
+        })
 
         populateTable()
 
@@ -21,18 +75,18 @@ $(async () => {
 
 
             if (row.next().attr('id') !== 'edit-container') {
-                let node = $(`<tr id="edit-container"><td colspan="5"><div style="width: 100%"><form class="d-flex" id="edit-form">
-                            <div class="edit-input" ><label  for="name">Nome</label>
+                let node = $(`<tr id="edit-container"><td colspan="5"><div><form class="d-flex flex-column flex-md-row" id="edit-form">
+                            <div class="edit-input d-flex flex-column" ><label  for="name">Nome</label>
                             <input type="text" id="name" name="name" value="${student.name}"></div>
-                            <div class="edit-input"><label for="surname">Cognome</label>
+                            <div class="edit-input d-flex flex-column"><label for="surname">Cognome</label>
                             <input type="text" id="surname" name="surname" value="${student.surname}"></div>
-                            <div class="edit-input"><label for="score">Voto</label>
+                            <div class="edit-input d-flex flex-column"><label for="score">Voto</label>
                             <input type="number" id="score" name="score" value="${student.vote.score}"></div>
-                            <div class="edit-input"><label for="data">Data</label>
+                            <div class="edit-input d-flex flex-column"><label for="data">Data</label>
                             <input type="date" id="date" name="data" value="${student.vote.date}"></div>
-                            <div class="edit-input"><label for="comment">Commento</label>
+                            <div class="edit-input d-flex flex-column"><label for="comment">Commento</label>
                             <textarea name="comment" id="comment" id="comment">${student.vote.comment}</textarea></div>
-                            <div class="edit-input mt-2"><label for="submit-edit"></label>
+                            <div class="edit-input d-flex flex-column mt-2"><label for="submit-edit"></label>
                             <input type="button" class="btn btn-danger submit-edit" name="submit-edit" id="submit-edit" value="Modifica"></div>
                             </form></div></td></tr>`);
                 row.after(node)
@@ -60,6 +114,15 @@ $(async () => {
             }
 
         });
+
+
+        $(document).on('click', 'div #insert-student', function (event) {
+            let titleBarCloseButton = $('.ui-dialog-titlebar .ui-dialog-titlebar-close')
+            titleBarCloseButton.html('<i class="fa-solid fa-xmark"></i>');
+            titleBarCloseButton.addClass('d-flex align-items-center justify-content-center btn btn-danger')
+            $('.ui-dialog-buttonset button').addClass('btn btn-danger')
+            insertStudentDialog.dialog('open');
+        })
 
 
         function populateTable() {

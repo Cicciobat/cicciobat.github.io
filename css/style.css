@@ -19,12 +19,19 @@ header {
 
 
 .edit-input {
-    display: flex;
-    flex-direction: column;
     margin: 0 0.5rem;
 }
 
 footer {
     background-color: black;
     color: white;
+}
+
+.ui-dialog-titlebar {
+    background-color: #B31D17FF;
+    color: white;
+}
+
+.btn-danger {
+    background-color: #B31D17FF;
 }

@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <title>Register</title>
+    <link href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
     <link href="./css/bootstrap/bootstrap.css" rel="stylesheet">
+
     <link href="./css/style.css" rel="stylesheet">
 </head>
 <body class="d-flex flex-column min-vh-100">
@@ -24,6 +26,11 @@
     </nav>
 </header>
 <main class="container my-4">
+    <div class="d-flex m-3">
+        <div class="insert-student-container ms-auto">
+            <button id="insert-student" type="button" class="btn btn-danger"><span><i class="fa-solid fa-plus"></i></span> Inserisci studente</button>
+        </div>
+    </div>
     <div>
         <table class="table">
             <caption>Lista degli studenti</caption>
@@ -40,6 +47,32 @@
             </tbody>
         </table>
     </div>
+
+    <div id="new-student-dialog">
+        <form id="new-student-insert">
+            <div class="d-flex flex-column">
+                <label for="new-name">Nome<abbr title="Obbligatorio">*</abbr></label>
+                <input minlength="3" maxlength="25" required name="new-name" id="new-name" type="text">
+            </div>
+            <div class="d-flex flex-column">
+                <label for="new-surname">Cognome<abbr title="Obbligatorio">*</abbr></label>
+                <input minlength="3" maxlength="25" required name="new-surname" id="new-surname" type="text">
+            </div>
+            <div class="d-flex flex-column">
+                <label for="new-score">Voto</label>
+                <input min="0" max="30" name="new-score" id="new-score" type="number">
+            </div>
+            <div class="d-flex flex-column">
+                <label for="new-date">Data</label>
+                <input min="2018-01-01" name="new-date" id="new-date" type="date">
+            </div>
+            <div class="d-flex flex-column">
+                <label for="new-comment">Commento</label>
+                <textarea name="new-comment" id="new-comment"></textarea>
+            </div>
+            <p class="m-2" id="insertion-result"></p>
+        </form>
+    </div>
 </main>
 <footer class="mt-auto">
     <div class="container d-flex justify-content-center align-items-center p-5 mt-auto">
@@ -49,7 +82,10 @@
         </p>
     </div>
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js" integrity="sha256-6XMVI0zB8cRzfZjqKcD01PBsAy3FlDASrlC8SxCpInY=" crossorigin="anonymous"></script>
+    <script
+            src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"
+            integrity="sha256-xLD7nhI62fcsEZK2/v8LsBcb4lG7dgULkuXoXB/j91c="
+            crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     <script src="./js/script.js" type="application/x-javascript"></script>
 </footer>
